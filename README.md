@@ -1,2 +1,9 @@
 # MipsCPU
-Projeto para disciplina de Infraestrutura de Hw
+
+ ![pic](cpu.png)
+ Multi cicle scheme
+
+ ## State machine
+ ![pic](statemachine.png)
+
+
