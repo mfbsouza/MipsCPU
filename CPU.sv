@@ -6,20 +6,23 @@ module cpu(
 	
 );
 
-//Fios grand√µes:
+//Fios grandoes:
 
-logic PCIn[31:0]; //sa√≠da do PCSource
+logic PCIn[31:0]; //saida do PCSource
 logic PCOut[31:0];
 logic IorROut[31:0];
 logic MemOut[31:0];
 logic WMWriteData[31:0];
 logic MDROut[31:0];
 logic WMRegOut[31:0];
+logic inst25_0[25:0]; //facilita ter sÛ ele porque no jump n„o precisa concatenar nada
 logic op[5:0];
-logic rs[4:0];
-logic rt[4:0];
-logic offset[15:0]; //lembrar como concateca e desconcatena fios (tirar bits do fio)
-// pegar os bits [15:11] - rd, [10:6] - shamt, e [5:0] - funct
+logic rs[4:0]; //inst25_0[25:21]
+logic rt[4:0]; //inst25_0[20:16]
+logic inst15_0[15:0]; //conferir se È isso msm vlw
+logic rd[4:0]; // inst15_0 [15:11]
+logic shamt[4:0]; // inst15_0[10:6]
+logic funct[5:0]; // inst15_0[5:0]
 //lembrar como fazer a entrada $29 no mux ReadS
 //e $31 pro mux RegDST
 logic RegDstOut[4:0];
@@ -34,7 +37,7 @@ logic RegBOut[31:0];
 logic AluSrcAOut[31:0];
 logic AluSrcBOut[31:0];
 logic AluResult[31:0]; //ALUOut
-logic RegAluOut[31:0]; //sa√≠da ALUOut
+logic RegAluOut[31:0]; //saida ALUOut
 logic EPCOut[31:0];
 logic RegInOut[31:0];
 logic ShiftSOut[31:0];
@@ -51,11 +54,11 @@ logic MultSOut[31:0];
 
 //Sinais de PC:
 
-logic PCCondOut; //sa√≠da do MUX PCCond
+logic PCCondOut; //saida do MUX PCCond
 logic PCWriteCond; // sinal da uc
 logic PCWrite; // sinal da uc
-logic PCAnd; //PcWriteCond and PCCOndOut
-logic PCControl; //fio da unidade de controle que entra em PC (PCAnd and PCWrite)
+logic PCAnd; //PcWriteCond and PCCondOut
+logic PCControl; //fio da unidade de controle que entra em PC (PCAnd or PCWrite)
 
 //Sinais de registradores:
 
@@ -72,17 +75,28 @@ logic RegLowW;
 //Sinais dos MUX:
 logic IorDMux[2:0];
 logic ReadSMux;
-logic ReadDSTMux[1:0];
+logic ReadDstMux[1:0];
 logic MemToRegMux[2:0];
 logic AluSrcAMux;
 logic AluSrcBMux[1:0];
 logic PCSourceMux[2:0];
 logic RegInMux;
 logic ShiftSMux;
-logic DivMUltMux;
+logic DivMultMux;
 logic MultSMux;
 
-
+// Sinais dos componentes:
+logic WMS; //write mode signal
+logic MemRead;
+logic MemWrite;
+logic AluOp[2:0];
+logic ShiftOp;
+logic StartDiv;
+logic DivStop;
+logic DivZero;
+logic StartMult;
+logic StopMult;
+logic MultO;
 
 
 Control ControlUnit( //unidade de controle (falta implementar)
@@ -218,3 +232,11 @@ Registrador Low(
 Mux2 MultS( //manda guardar o valor do high (0) ou do low(0) no br
 
 );
+
+assign rs = inst25_0[25:21];
+assign rt = inst25_0[20:16];
+assign rd = inst15_0 [15:11];
+assign shamt = inst15_0 [10:6];
+assign funct = inst15_0[5:0];
+
+endmodule
