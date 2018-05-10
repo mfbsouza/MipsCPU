@@ -48,8 +48,8 @@ logic MultSOut[31:0];
 
 //Sinais de PC:
 logic PCCondOut; //saida do MUX PCCond
-logic PCWriteCond; // sinal da uc
-logic PCWrite; // sinal da uc
+logic PCWriteCond; // sinal da unidade de controle
+logic PCWrite; // sinal da unidade de controle
 logic PCAnd; //PcWriteCond and PCCondOut
 logic PCControl; //fio da unidade de controle que entra em PC (PCAnd or PCWrite)
 
@@ -192,12 +192,12 @@ SignExtend SE(
 	.Instruction31_0(SignExtendOut)
 );
 
-ShiftLeft SL1( //shift left dps do sign extend
+ShiftLeft SL1( //shift left dps do sign extend (16 bits para 32)
 	.In(SignExtendOut),
 	.Out(SL1Out)
 );
 
-ShiftLeft SL2( //shift left do jump
+ShiftLeft26_28 SL2( //shift left do jump (26 bits para 28)
 	.In(inst25_0),
 	.Out(SL2Out)
 );

@@ -192,12 +192,12 @@ SignExtend SE(
 	.Instruction31_0(SignExtendOut)
 );
 
-ShiftLeft SL1( //shift left dps do sign extend
+ShiftLeft SL1( //shift left dps do sign extend (16 bits para 32)
 	.In(SignExtendOut),
 	.Out(SL1Out)
 );
 
-ShiftLeft SL2( //shift left do jump
+ShiftLeft26_28 SL2( //shift left do jump (26 bits para 28)
 	.In(inst25_0),
 	.Out(SL2Out)
 );
@@ -308,4 +308,4 @@ assign funct = inst15_0[5:0];
 assign sp = 29;
 assign reg31 = 31;
 
-endmodule
+endmodule:cpu
