@@ -1,16 +1,9 @@
-module cpu(
-	input clock,
-	input reset,
-	
-	output 
-	
-);
+module cpu(input clock, input reset);
 
 //Fios grandoes:
-
 logic PCIn[31:0]; //saida do PCSource
 logic PCOut[31:0];
-logic IorROut[31:0];
+logic IorDOut[31:0];
 logic MemOut[31:0];
 logic WMWriteData[31:0];
 logic MDROut[31:0];
@@ -25,7 +18,8 @@ logic shamt[4:0]; // inst15_0[10:6]
 logic funct[5:0]; // inst15_0[5:0]
 logic sp; //$29
 logic reg31; //$31
-logic RegDstOut[4:0];
+logic ReadSOut[4:0];
+logic RegDstOut[4:0]; 
 logic MemToRegOut[31:0];
 logic SignExtendOut[31:0];
 logic SL1Out[31:0];
@@ -62,7 +56,7 @@ logic PCControl; //fio da unidade de controle que entra em PC (PCAnd or PCWrite)
 //Sinais de registradores:
 logic MDRS;
 logic IRWrite;
-logic RegWrite;
+logic RegWriteSignal;
 logic RegAW;
 logic RegBW;
 logic RegALuWrite;
@@ -71,17 +65,17 @@ logic RegHighW;
 logic RegLowW;
 
 //Sinais dos MUX:
-logic IorDMux[2:0];
-logic ReadSMux;
-logic ReadDstMux[1:0];
-logic MemToRegMux[2:0];
-logic AluSrcAMux;
-logic AluSrcBMux[1:0];
-logic PCSourceMux[2:0];
-logic RegInMux;
-logic ShiftSMux;
-logic DivMultMux;
-logic MultSMux;
+logic IorDMux[2:0]; //mux 5
+logic ReadSMux; //mux 2
+logic ReadDstMux[1:0]; //mux 4
+logic MemToRegMux[2:0]; //mux 7
+logic AluSrcAMux; //mux 2
+logic AluSrcBMux[1:0]; //mux 4
+logic PCSourceMux[2:0]; //mux 6
+logic RegInMux; //mux 2
+logic ShiftSMux; //mux 2
+logic DivMultMux; //mux 2
+logic MultSMux; //mux 2
 
 // Sinais dos componentes:
 logic WMS; //write mode signal
@@ -96,7 +90,7 @@ logic StartMult;
 logic StopMult;
 logic MultO;
 
-// Saidas da ULA
+// Saidas da ULA:
 logic zeroFlag;
 logic negFlag;
 logic overflowFlag;
@@ -120,8 +114,12 @@ Mux5 IorD(
 	//conexoes
 );
 
-Memoria Mem(
-	//conexoes
+Memoria Mem( // terminar *
+	.Address(IorDOut),
+	.Clock(clock),
+	.Wr(),
+	.Datain(),
+	.Dataout()
 );
 
 WriteMode WM(
@@ -148,7 +146,7 @@ Instr_Reg IR(
 );
 
 Mux2 ReadS(
-	//fodase
+	
 );
 
 Mux4 ReadDST(
@@ -160,7 +158,15 @@ Mux7 MemToReg(
 );
 
 Banco_reg Registers(
-
+	.Clk(clock),
+	.Reset(reset),
+	.RegWrite(RegWriteSignal), //ver se tem problema
+	.ReadReg1(ReadSOut),
+	.ReadReg2(rt),
+	.WriteReg(RegDstOut),
+	.WriteData(MemToRegOut),
+	.ReadData1(RegAIn),
+	.ReadData2(RegBIn)
 );
 
 
@@ -182,16 +188,18 @@ Registrador B(
 
 
 SignExtend SE(
-	.A(inst15_0),
-	.B(SignExtendOut)
+	.Instruction15_0(inst15_0),
+	.Instruction31_0(SignExtendOut)
 );
 
 ShiftLeft SL1( //shift left dps do sign extend
-
+	.In(SignExtendOut),
+	.Out(SL1Out)
 );
 
-ShiftLeft SL2( //shift left jump
-
+ShiftLeft SL2( //shift left do jump
+	.In(inst25_0),
+	.Out(SL2Out)
 );
 
 Mux2 AluSrcA(
@@ -239,7 +247,7 @@ Mux4 PCCond(
 
 );
 
-Mux2 RegIn( //escolhe qual entrada será deslocada no reg desloc
+Mux2 RegIn( //escolhe qual entrada sera deslocada no reg desloc
 
 );
 
@@ -248,7 +256,12 @@ Mux2 ShiftS( //escolhe qual o shamt (shift amount) do reg desloc
 );
 
 RegDesloc RD( //Reg Desloc
-
+	.Clk(clock),
+	.Reset(reset),
+	.Shift(ShiftOp),
+	.N(ShiftSOut),
+	.Entrada(RegInOut),
+	.Saida(RegDeslocOut)
 );
 
 Div Divisor(
