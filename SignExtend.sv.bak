@@ -1,0 +1,5 @@
+module SignExtend(input logic [15:0] a, output logic [31:0] b);
+
+assign b = (a[15] == 0) ? (32'b00000000000000000000000000000000 + a) : (32'b11111111111111110000000000000000 + a);
+
+endmodule

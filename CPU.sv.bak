@@ -53,7 +53,6 @@ logic LowOut[31:0];
 logic MultSOut[31:0];
 
 //Sinais de PC:
-
 logic PCCondOut; //saida do MUX PCCond
 logic PCWriteCond; // sinal da uc
 logic PCWrite; // sinal da uc
@@ -61,7 +60,6 @@ logic PCAnd; //PcWriteCond and PCCondOut
 logic PCControl; //fio da unidade de controle que entra em PC (PCAnd or PCWrite)
 
 //Sinais de registradores:
-
 logic MDRS;
 logic IRWrite;
 logic RegWrite;
@@ -98,13 +96,24 @@ logic StartMult;
 logic StopMult;
 logic MultO;
 
+// Saidas da ULA
+logic zeroFlag;
+logic negFlag;
+logic overflowFlag;
+logic equalFlag; //et
+logic ltFlag; //less than
+logic gtFlag; //greater than
 
 Control ControlUnit( //unidade de controle (falta implementar)
 
 );
 
 Registrador PC(
-	//conexoes
+	.Clk(clock),
+	.Reset(reset),
+	.Load(PCControl), //conferir se ้ isso
+	.Entrada(PCIn),
+	.Saida(PCOut)
 );
 
 Mux5 IorD(
@@ -120,11 +129,22 @@ WriteMode WM(
 );
 
 Registrador MDR(
-	//conexoes
+	.Clk(clock),
+	.Reset(reset),
+	.Load(MDRS), //conferir se ้ isso
+	.Entrada(MemOut),
+	.Saida(MDROut)
 );
 
 Instr_Reg IR(
-	//conexoes
+	.Clk(clock),
+	.Reset(reset),
+	.Load_ir(IRWrite), //conferir
+	.Entrada(MemOut),
+	.Instr31_26(op),
+	.Instr25_21(rs),
+	.Instr20_16(rt),
+	.Instr15_0(inst15_0)
 );
 
 Mux2 ReadS(
@@ -145,19 +165,28 @@ Banco_reg Registers(
 
 
 Registrador A(
-
+	.Clk(clock),
+	.Reset(reset),
+	.Load(RegAW), //conferir se ้ isso
+	.Entrada(RegAIn),
+	.Saida(RegAOut)
 );
 
 Registrador B(
-
+	.Clk(clock),
+	.Reset(reset),
+	.Load(RegBW), //conferir se ้ isso
+	.Entrada(RegBIn),
+	.Saida(RegBOut)
 );
 
 
 SignExtend SE(
-
+	.A(inst15_0),
+	.B(SignExtendOut)
 );
 
-ShiftLeft SL1( //shift left pรณs sign extend
+ShiftLeft SL1( //shift left dps do sign extend
 
 );
 
@@ -174,15 +203,32 @@ Mux4 AluSrcB(
 );
 
 ula32 ALU(
-
+	.A(AluSrcAOut),
+	.B(AluSrcBOut),
+	.Seletor(AluOp),
+	.S(AluResult),
+	.Overflow(overflowFlag),
+	.Negativo(negFlag),
+	.z(zeroFlag),
+	.Igual(equalFlag),
+	.Maior(gtFlag),
+	.Menor(ltFlag)
 );
 
 Registrador ALUOut(
-
+	.Clk(clock),
+	.Reset(reset),
+	.Load(RegALuWrite), //conferir se ้ isso
+	.Entrada(AluResult),
+	.Saida(RegAluOut)
 );
 
 Registrador EPC(
-
+	.Clk(clock),
+	.Reset(reset),
+	.Load(EPCWrite), //conferir se ้ isso
+	.Entrada(AluResult),
+	.Saida(EPCOut)
 );
 
 Mux6 PCSource(
@@ -222,11 +268,19 @@ Mux2 DivMultLow(
 );
 
 Registrador High(
-
+	.Clk(clock),
+	.Reset(reset),
+	.Load(RegHighW), //conferir se ้ isso
+	.Entrada(MUXHighOut),
+	.Saida(HighOut)
 );
 
 Registrador Low(
-
+	.Clk(clock),
+	.Reset(reset),
+	.Load(RegLowW), //conferir se ้ isso
+	.Entrada(MUXLowOut),
+	.Saida(LowOut)
 );
 
 Mux2 MultS( //manda guardar o valor do high (0) ou do low(0) no br
@@ -239,5 +293,6 @@ assign rd = inst15_0 [15:11];
 assign shamt = inst15_0 [10:6];
 assign funct = inst15_0[5:0];
 assign sp = 29;
+assign reg31 = 31;
 
 endmodule
