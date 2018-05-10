@@ -23,8 +23,8 @@ logic inst15_0[15:0]; //conferir se é isso msm vlw
 logic rd[4:0]; // inst15_0 [15:11]
 logic shamt[4:0]; // inst15_0[10:6]
 logic funct[5:0]; // inst15_0[5:0]
-//lembrar como fazer a entrada $29 no mux ReadS
-//e $31 pro mux RegDST
+logic sp; //$29
+logic reg31; //$31
 logic RegDstOut[4:0];
 logic MemToRegOut[31:0];
 logic SignExtendOut[31:0];
@@ -238,5 +238,7 @@ assign rt = inst25_0[20:16];
 assign rd = inst15_0 [15:11];
 assign shamt = inst15_0 [10:6];
 assign funct = inst15_0[5:0];
+assign sp = 29;
+assign reg31 = 31;
 
 endmodule
