@@ -1,0 +1,10 @@
+implementar controle
+implementar or dos fios que gera pccontrol
+implementar mux5
+implementar writemode
+implementar mux2
+implementar mux4
+implementar mux7
+implementar mux6
+implementar div
+implementar mult

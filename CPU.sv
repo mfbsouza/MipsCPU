@@ -105,7 +105,7 @@ Control ControlUnit( //unidade de controle (falta implementar)
 Registrador PC(
 	.Clk(clock),
 	.Reset(reset),
-	.Load(PCControl), //conferir se é isso
+	.Load(PCControl), //conferir se é isso(ta certo, so falta fazer o OR entre os fios. bois)
 	.Entrada(PCIn),
 	.Saida(PCOut)
 );
@@ -129,7 +129,7 @@ WriteMode WM(
 Registrador MDR(
 	.Clk(clock),
 	.Reset(reset),
-	.Load(MDRS), //conferir se é isso
+	.Load(MDRS), //conferir se é isso(ta certo tbm. bois)
 	.Entrada(MemOut),
 	.Saida(MDROut)
 );
@@ -137,7 +137,7 @@ Registrador MDR(
 Instr_Reg IR(
 	.Clk(clock),
 	.Reset(reset),
-	.Load_ir(IRWrite), //conferir
+	.Load_ir(IRWrite), //conferir(certo tbm. bois)
 	.Entrada(MemOut),
 	.Instr31_26(op),
 	.Instr25_21(rs),
@@ -160,7 +160,7 @@ Mux7 MemToReg(
 Banco_reg Registers(
 	.Clk(clock),
 	.Reset(reset),
-	.RegWrite(RegWriteSignal), //ver se tem problema
+	.RegWrite(RegWriteSignal), //ver se tem problema(certo, eh o sinal que escreve ou lê. bois)
 	.ReadReg1(ReadSOut),
 	.ReadReg2(rt),
 	.WriteReg(RegDstOut),
@@ -173,7 +173,7 @@ Banco_reg Registers(
 Registrador A(
 	.Clk(clock),
 	.Reset(reset),
-	.Load(RegAW), //conferir se é isso
+	.Load(RegAW), //conferir se é isso(ok. bois)
 	.Entrada(RegAIn),
 	.Saida(RegAOut)
 );
@@ -181,7 +181,7 @@ Registrador A(
 Registrador B(
 	.Clk(clock),
 	.Reset(reset),
-	.Load(RegBW), //conferir se é isso
+	.Load(RegBW), //conferir se é isso(ok. bois)
 	.Entrada(RegBIn),
 	.Saida(RegBOut)
 );
@@ -226,7 +226,7 @@ ula32 ALU(
 Registrador ALUOut(
 	.Clk(clock),
 	.Reset(reset),
-	.Load(RegALuWrite), //conferir se é isso
+	.Load(RegALuWrite), //conferir se é isso(ok. bois)
 	.Entrada(AluResult),
 	.Saida(RegAluOut)
 );
@@ -234,7 +234,7 @@ Registrador ALUOut(
 Registrador EPC(
 	.Clk(clock),
 	.Reset(reset),
-	.Load(EPCWrite), //conferir se é isso
+	.Load(EPCWrite), //conferir se é isso(ok, bois)
 	.Entrada(AluResult),
 	.Saida(EPCOut)
 );
