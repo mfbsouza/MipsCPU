@@ -1,4 +1,14 @@
-module Mux7(input logic [31:0] A, input logic [31:0] B, input logic [31:0] C, input logic [31:0] D, input logic [31:0] E, input logic [31:0] F, input logic [31:0] G, output logic [31:0] S, input logic [2:0] sel) ;
+module Mux7(
+	input logic [31:0] A,
+	input logic [31:0] B,
+	input logic [31:0] C,
+	input logic [31:0] D,
+	input logic [31:0] E,
+	input logic [31:0] F,
+	input logic [31:0] G,
+	output logic [31:0] S,
+	input logic [2:0] sel
+);
 
 always
 	case(sel)
