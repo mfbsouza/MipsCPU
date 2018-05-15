@@ -6,6 +6,8 @@ implementar mux2		(done. adicionar os fios)
 implementar mux4		(done. adicionar os fios)
 implementar mux7		(done. adicionar os fios)
 implementar mux6		(done. adicionar os fios)
+implementar mux2_5		(done. adicionar os fios)
+implementar mux4_5		(done. adicionar os fios)
 implementar muxcond		(done. adicionar a cpu)
 implementar div
 implementar mult
