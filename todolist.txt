@@ -1,10 +1,12 @@
 implementar controle
-implementar or dos fios que gera pccontrol
-implementar mux5
+implementar o OR dos fios que gera pccontrol
 implementar writemode
-implementar mux2
-implementar mux4
-implementar mux7
-implementar mux6
+implementar mux5	(done. adicionar os fios)
+implementar mux2	(done. adicionar os fios)
+implementar mux4	(done. adicionar os fios)
+implementar mux7	(done. adicionar os fios)
+implementar mux6	(done. adicionar os fios)
 implementar div
 implementar mult
+
+revisar cada modula da cpu
