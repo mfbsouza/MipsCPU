@@ -1,6 +1,6 @@
 implementar controle	(so arquivo criado)
 implementar o OR dos fios que gera pccontrol
-implementar writemode
+implementar writemode	(medio. os sinais tao zoados na imagem)
 implementar mux5		(done. adicionar os fios)
 implementar mux2		(done. adicionar os fios)
 implementar mux4		(done. adicionar os fios)
