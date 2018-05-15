@@ -16,8 +16,8 @@ logic inst15_0[15:0]; //conferir se é isso msm vlw
 logic rd[4:0]; // inst15_0 [15:11]
 logic shamt[4:0]; // inst15_0[10:6]
 logic funct[5:0]; // inst15_0[5:0]
-logic sp; //$29
-logic reg31; //$31
+logic sp[4:0]; //$29
+logic reg31[4:0]; //$31
 logic ReadSOut[4:0];
 logic RegDstOut[4:0]; 
 logic MemToRegOut[31:0];
