@@ -16,8 +16,8 @@ logic inst15_0[15:0]; //conferir se é isso msm vlw
 logic rd[4:0]; // inst15_0 [15:11]
 logic shamt[4:0]; // inst15_0[10:6]
 logic funct[5:0]; // inst15_0[5:0]
-logic sp; //$29
-logic reg31; //$31
+logic sp[4:0]; //$29
+logic reg31[4:0]; //$31
 logic ReadSOut[4:0];
 logic RegDstOut[4:0]; 
 logic MemToRegOut[31:0];
@@ -76,6 +76,7 @@ logic RegInMux; //mux 2
 logic ShiftSMux; //mux 2
 logic DivMultMux; //mux 2
 logic MultSMux; //mux 2
+logic PCCondMux[1:0];
 
 // Sinais dos componentes:
 logic WMS; //write mode signal
@@ -105,13 +106,19 @@ Control ControlUnit( //unidade de controle (falta implementar)
 Registrador PC(
 	.Clk(clock),
 	.Reset(reset),
-	.Load(PCControl), //conferir se é isso
+	.Load(PCControl), //conferir se é isso(ta certo, so falta fazer o OR entre os fios. bois)
 	.Entrada(PCIn),
 	.Saida(PCOut)
 );
 
-Mux5 IorD(
-	//conexoes
+Mux5 IorD( //faltando declarar os outros fios
+	.A(PCOut),
+	.B(),
+	.C(),
+	.D(),
+	.E(),
+	.S(IorDOut),
+	.sel(IorDMux)
 );
 
 Memoria Mem( // terminar *
@@ -129,7 +136,7 @@ WriteMode WM(
 Registrador MDR(
 	.Clk(clock),
 	.Reset(reset),
-	.Load(MDRS), //conferir se é isso
+	.Load(MDRS), //conferir se é isso(ta certo tbm. bois)
 	.Entrada(MemOut),
 	.Saida(MDROut)
 );
@@ -137,7 +144,7 @@ Registrador MDR(
 Instr_Reg IR(
 	.Clk(clock),
 	.Reset(reset),
-	.Load_ir(IRWrite), //conferir
+	.Load_ir(IRWrite), //conferir(certo tbm. bois)
 	.Entrada(MemOut),
 	.Instr31_26(op),
 	.Instr25_21(rs),
@@ -145,22 +152,38 @@ Instr_Reg IR(
 	.Instr15_0(inst15_0)
 );
 
-Mux2 ReadS(
-	
+Mux2_5 ReadS(
+	.A(sp),
+	.B(rs),
+	.S(ReadSOut),
+	.sel(ReadSMux)
 );
 
-Mux4 ReadDST(
-
+Mux4_5 ReadDST(
+	.A(rt),
+	.B(reg31),
+	.C(sp),
+	.D(rd),
+	.S(RegDstOut),
+	.sel(ReadDSTMux)
 );
 
 Mux7 MemToReg(
-
+	.A(RegAluOut),
+	.B(RegDeslocOut),
+	.C(WMRegOut),
+	.D(MultSOut),
+	.E({inst15_0, 16'd0}),
+	.F({ltFlag, 16'd0}),
+	.G(32'd227), //inicialmente: 8'd227
+	.S(MemToRegOut),
+	.sel(MemToRegMux)
 );
 
 Banco_reg Registers(
 	.Clk(clock),
 	.Reset(reset),
-	.RegWrite(RegWriteSignal), //ver se tem problema
+	.RegWrite(RegWriteSignal), //ver se tem problema(certo, eh o sinal que escreve ou lê. bois)
 	.ReadReg1(ReadSOut),
 	.ReadReg2(rt),
 	.WriteReg(RegDstOut),
@@ -173,7 +196,7 @@ Banco_reg Registers(
 Registrador A(
 	.Clk(clock),
 	.Reset(reset),
-	.Load(RegAW), //conferir se é isso
+	.Load(RegAW), //conferir se é isso(ok. bois)
 	.Entrada(RegAIn),
 	.Saida(RegAOut)
 );
@@ -181,7 +204,7 @@ Registrador A(
 Registrador B(
 	.Clk(clock),
 	.Reset(reset),
-	.Load(RegBW), //conferir se é isso
+	.Load(RegBW), //conferir se é isso(ok. bois)
 	.Entrada(RegBIn),
 	.Saida(RegBOut)
 );
@@ -203,11 +226,19 @@ ShiftLeft26_28 SL2( //shift left do jump (26 bits para 28)
 );
 
 Mux2 AluSrcA(
-
+	.A(PCOut),
+	.B(RegAOut),
+	.S(AluSrcAOut),
+	.sel(AluSrcAMux)
 );
 
 Mux4 AluSrcB(
-
+	.A(RegBOut),
+	.B(32'd4),
+	.C(SignExtendOut),
+	.D(SL1Out),
+	.S(AluSrcBOut),
+	.sel(AluSrcBMux)
 );
 
 ula32 ALU(
@@ -226,7 +257,7 @@ ula32 ALU(
 Registrador ALUOut(
 	.Clk(clock),
 	.Reset(reset),
-	.Load(RegALuWrite), //conferir se é isso
+	.Load(RegALuWrite), //conferir se é isso(ok. bois)
 	.Entrada(AluResult),
 	.Saida(RegAluOut)
 );
@@ -234,25 +265,43 @@ Registrador ALUOut(
 Registrador EPC(
 	.Clk(clock),
 	.Reset(reset),
-	.Load(EPCWrite), //conferir se é isso
+	.Load(EPCWrite), //conferir se é isso(ok, bois)
 	.Entrada(AluResult),
 	.Saida(EPCOut)
 );
 
 Mux6 PCSource(
-
+	.A(AluResult),
+	.B(RegAluOut),
+	.C(SL2Out),
+	.D(EPCOut),
+	.E(WMRegOut),
+	.F(RegAOut),
+	.S(PCIn),
+	.sel(PCSourceMux)
 );
 
 Mux4 PCCond(
-
+	.A(gtFlag),
+	.B(),
+	.C(),
+	.D(zeroFlag),
+	.S(PCCondOut),
+	.sel(PCCondMux)
 );
 
 Mux2 RegIn( //escolhe qual entrada sera deslocada no reg desloc
-
+	.A(RegBOut),
+	.B(RegAOut),
+	.S(RegInOut),
+	.sel(RegInMux)
 );
 
 Mux2 ShiftS( //escolhe qual o shamt (shift amount) do reg desloc
-
+	.A(RegBOut),
+	.B({shamt, 27'd0}),
+	.S(ShiftSOut),
+	.sel(ShiftSMux)
 );
 
 RegDesloc RD( //Reg Desloc
@@ -272,12 +321,19 @@ Mult Multiplicador(
 
 );
 
-Mux2 DivMultHigh(
+Mux2 DivMultHigh( //escolhe se vai pro reg HIGH o high do mult ou div
+	.A(DivHighOut),
+	.B(MultHighOut),
+	.S(MUXHighOut),
+	.sel(DivMultMux)
 
 );
 
-Mux2 DivMultLow(
-
+Mux2 DivMultLow( //escolhe se vai pro reg LOW o low do mult ou div
+	.A(DivLowOut),
+	.B(MultLowOut),
+	.S(MUXLowOut),
+	.sel(DivMultMux)
 );
 
 Registrador High(
@@ -297,7 +353,10 @@ Registrador Low(
 );
 
 Mux2 MultS( //manda guardar o valor do high (0) ou do low(0) no br
-
+	.A(HighOut),
+	.B(LowOut),
+	.S(MultSOut),
+	.sel(MultSMux)
 );
 
 assign rs = inst25_0[25:21];
@@ -308,4 +367,4 @@ assign funct = inst15_0[5:0];
 assign sp = 29;
 assign reg31 = 31;
 
-endmodule
+endmodule:cpu

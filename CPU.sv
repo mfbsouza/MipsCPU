@@ -76,6 +76,7 @@ logic RegInMux; //mux 2
 logic ShiftSMux; //mux 2
 logic DivMultMux; //mux 2
 logic MultSMux; //mux 2
+logic PCCondMux[1:0];
 
 // Sinais dos componentes:
 logic WMS; //write mode signal
@@ -110,8 +111,14 @@ Registrador PC(
 	.Saida(PCOut)
 );
 
-Mux5 IorD(
-	//conexoes
+Mux5 IorD( //faltando declarar os outros fios
+	.A(PCOut),
+	.B(32'd253),
+	.C(32'd254),
+	.D(32'd255),
+	.E(RegAluOut),
+	.S(IorDOut),
+	.sel(IorDMux)
 );
 
 Memoria Mem( // terminar *
@@ -145,16 +152,32 @@ Instr_Reg IR(
 	.Instr15_0(inst15_0)
 );
 
-Mux2 ReadS(
-	
+Mux2_5 ReadS(
+	.A(sp),
+	.B(rs),
+	.S(ReadSOut),
+	.sel(ReadSMux)
 );
 
-Mux4 ReadDST(
-
+Mux4_5 ReadDST(
+	.A(rt),
+	.B(reg31),
+	.C(sp),
+	.D(rd),
+	.S(RegDstOut),
+	.sel(ReadDSTMux)
 );
 
 Mux7 MemToReg(
-
+	.A(RegAluOut),
+	.B(RegDeslocOut),
+	.C(WMRegOut),
+	.D(MultSOut),
+	.E({inst15_0, 16'd0}),
+	.F({ltFlag, 16'd0}),
+	.G(32'd227), //inicialmente: 8'd227
+	.S(MemToRegOut),
+	.sel(MemToRegMux)
 );
 
 Banco_reg Registers(
@@ -203,11 +226,19 @@ ShiftLeft26_28 SL2( //shift left do jump (26 bits para 28)
 );
 
 Mux2 AluSrcA(
-
+	.A(PCOut),
+	.B(RegAOut),
+	.S(AluSrcAOut),
+	.sel(AluSrcAMux)
 );
 
 Mux4 AluSrcB(
-
+	.A(RegBOut),
+	.B(32'd4),
+	.C(SignExtendOut),
+	.D(SL1Out),
+	.S(AluSrcBOut),
+	.sel(AluSrcBMux)
 );
 
 ula32 ALU(
@@ -240,19 +271,37 @@ Registrador EPC(
 );
 
 Mux6 PCSource(
-
+	.A(AluResult),
+	.B(RegAluOut),
+	.C(SL2Out),
+	.D(EPCOut),
+	.E(WMRegOut),
+	.F(RegAOut),
+	.S(PCIn),
+	.sel(PCSourceMux)
 );
 
 Mux4 PCCond(
-
+	.A(gtFlag),
+	.B(),
+	.C(),
+	.D(zeroFlag),
+	.S(PCCondOut),
+	.sel(PCCondMux)
 );
 
 Mux2 RegIn( //escolhe qual entrada sera deslocada no reg desloc
-
+	.A(RegBOut),
+	.B(RegAOut),
+	.S(RegInOut),
+	.sel(RegInMux)
 );
 
 Mux2 ShiftS( //escolhe qual o shamt (shift amount) do reg desloc
-
+	.A(RegBOut),
+	.B({shamt, 27'd0}),
+	.S(ShiftSOut),
+	.sel(ShiftSMux)
 );
 
 RegDesloc RD( //Reg Desloc
@@ -272,12 +321,19 @@ Mult Multiplicador(
 
 );
 
-Mux2 DivMultHigh(
+Mux2 DivMultHigh( //escolhe se vai pro reg HIGH o high do mult ou div
+	.A(DivHighOut),
+	.B(MultHighOut),
+	.S(MUXHighOut),
+	.sel(DivMultMux)
 
 );
 
-Mux2 DivMultLow(
-
+Mux2 DivMultLow( //escolhe se vai pro reg LOW o low do mult ou div
+	.A(DivLowOut),
+	.B(MultLowOut),
+	.S(MUXLowOut),
+	.sel(DivMultMux)
 );
 
 Registrador High(
@@ -297,7 +353,10 @@ Registrador Low(
 );
 
 Mux2 MultS( //manda guardar o valor do high (0) ou do low(0) no br
-
+	.A(HighOut),
+	.B(LowOut),
+	.S(MultSOut),
+	.sel(MultSMux)
 );
 
 assign rs = inst25_0[25:21];
