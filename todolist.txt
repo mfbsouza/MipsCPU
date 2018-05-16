@@ -1,17 +1,25 @@
+TO DO:
 implementar controle	(so arquivo criado)
 implementar o OR dos fios que gera pccontrol
 implementar writemode	(medio. os sinais tao zoados na imagem)
-implementar mux5		(done. adicionar os fios)
-implementar mux2		(done. adicionar os fios)
-implementar mux4		(done. adicionar os fios)
-implementar mux7		(done. adicionar os fios)
-implementar mux6		(done. adicionar os fios)
-implementar mux2_5		(done. adicionar os fios)
-implementar mux4_5		(done. adicionar os fios)
 implementar muxcond		(done. adicionar a cpu)
 implementar div
 implementar mult
 implementar push
 implementar pop
+conferir com Ladson se concatenação é feita assim: {inst15_0, 16'd0}
+conferir se isso funciona {shamt, 27'd0} pra concatenar 5 bits com mais 27 (32 bits)
+terminar de adicionar fios pro mux 4 de PCCond
+terminar de adicionar os fios da memória
 
-revisar cada modula da cpu
+revisar cada modulo da cpu
+
+
+DONE:
+implementar mux7		(done. adicionar os fios)
+implementar mux4_5		(done. adicionar os fios)
+implementar mux2_5		(done. adicionar os fios)
+implementar mux2		(done. adicionar os fios)
+implementar mux4		(done. adicionar os fios)
+implementar mux6		(done. adicionar os fios)
+implementar mux5		(done. adicionar os fios)
