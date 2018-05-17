@@ -158,7 +158,7 @@ always_ff@(posedge clk, posedge reset) begin
    // stateOut = state;
 end
 
-always_comb
+always_comb begin
   case(state)
       
       Reset: begin
@@ -322,8 +322,49 @@ always_comb
         StartMult = 0;
         MultStop = 0;
         MultO = 0; 
-        nextState = Reset; 
-     end 
+        case(op)
+            6'h8 : nextState = Addi;
+            6'h9 : nextState = Addiu;
+            6'h4 : nextState = Beq_compare;
+            6'h5 : nextState = Bne_compare;
+            6'h6 : nextState = Ble_compare;
+            6'h7 : nextState = Bgt_compare;
+            6'h20 : nextState = LB_address;
+            6'h21: nextState = LH_address;
+            6'hf : nextState = Lui_load;
+            6'h23 : nextState = LW_address;
+            6'h28: nextState = SB_address;
+            6'h29 : nextState = SH_address;
+            6'ha : nextState = Slti;
+            6'h2b : nextState = SW_address;
+            6'h2 : nextState = J_jump;
+            6'h3 : nextState = Jal;
+                6'h0: //caso o opcode for 0x0, olhar o funct
+                case(funct)
+                      6'h20 : nextState = Add;
+                      6'h24 : nextState = And;
+                      //6'h1a : nextState = Div;
+                      //6'h18 : nextState = Mult;
+                      6'h8 : nextState = Jr;
+                      6'h10 : nextState = Mfhi;
+                      6'h12 : nextState = Mflo;
+                      6'h0 : nextState = ShiftShamt;
+                      6'h4 : nextState = ShiftReg;
+                      6'h2a : nextState = Slt;
+                      6'h3 : nextState = ShiftShamt;
+                      6'h7 : nextState = ShiftReg;
+                      6'h2 : nextState = ShiftShamt;
+                      6'h22 : nextState = Sub;
+                      6'hd : nextState = Break;
+                      6'h13 : nextState = Rte;
+                      6'h5 : nextState = Push;
+                      6'h6 : nextState = Pop;
+                      default: nextState = Reset; // n sei se serve de algo mas ta ai
+              endcase
+              default: nextState = noop_load;
+          endcase
+    end
+      
       Beq_compare: begin
         PCWriteCond = 1;
         PCWrite = 0;
@@ -3169,19 +3210,19 @@ always_comb
             
             nextState = RegD_Shift;
         end
-        //Div: begin
-        //end
-        //HliLoD: begin
-        //end
-        //Mult: begin
-        //end
-        //HliLoM: begin
-        //end
+       /* Div: begin
+        end
+        HliLoD: begin
+        end
+        Mult: begin
+        end
+        HliLoM: begin
+        end
 
-        //Div_Zero: begin
-        //end
-        //Div_Stall: begin
-        //end
+        Div_Zero: begin
+        end
+        Div_Stall: begin
+        end*/
         noop_load: begin
           PCWriteCond = 0;
         PCWrite = 0;
@@ -3306,4 +3347,7 @@ always_comb
             nextState = Fetch;
         end
   endcase
+  end
 endmodule
+
+   
