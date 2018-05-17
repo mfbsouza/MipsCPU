@@ -370,6 +370,17 @@ RegDesloc RD( //Reg Desloc
 	.Saida(RegDeslocOut)
 );
 
+Multiplicador Mult (
+	.A(RegAOut),
+	.B(RegBOut),
+	.clk(clock),
+	.Reset(reset),
+	.resultHigh(MultHighOut),
+	.resultLow(MultLowOut),
+	.MultOut(StopMult),
+	.MultIn(StartMult) //sinal de controle
+);
+
 //Div Divisor(
 //);
 
