@@ -150,10 +150,10 @@ Control ControlUnit(
 	.DivStop(DivStop),
 	.DivZero(DivZero),
 	.StartMult(StartMult),
-	.StopMult(StopMult),
+	.MultStop(StopMult),
 	.MultO(MultO),
 	//estado
-    .stateOut(stateOut)
+    //.stateOut(stateOut)
 );
 
 Registrador PC(
