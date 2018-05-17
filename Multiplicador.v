@@ -3,7 +3,7 @@ module Multiplicador (A, B, resultHigh, resultLow, MultIn, MultOut, clk, Reset);
 input [31:0] A, B;
 input clk, Reset;
 output reg [31:0] resultHigh, resultLow;
-reg [63:0] Add, Sub, Produto; // multiplicando, o negativo do multiplicando e zeros, respectivamente
+reg [64:0] Add, Sub, Produto; // multiplicando, o negativo do multiplicando e zeros, respectivamente
 reg [31:0] comp2;
 output reg MultOut;
 integer contador = 32;
