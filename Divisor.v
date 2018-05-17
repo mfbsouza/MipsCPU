@@ -45,5 +45,10 @@ always @(posedge clk) begin
         DivStop = 0;
         contador = -1;
     end
+    
+    if(contador == -1) begin
+        Resto = 32'b0;
+        Quociente = 65'b0;
+    end
 
     endmodule
