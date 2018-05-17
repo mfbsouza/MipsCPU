@@ -105,9 +105,9 @@ enum logic [6:0] {
 	Addi= 7'd43,
 	RegT_Write= 7'd44,
 	//dentro do H -  inferior - esquerdo
-	noop_load= 7'd45,
-	noop_wait= 7'd46,
-	noop_pc= 7'd47,
+	ov_load= 7'd45,
+	ov_wait= 7'd46,
+	ov_pc= 7'd47,
 	//dentro do H  - inferior - direito
 	Push= 7'd48,
 	NewRA=  7'd49,//New_$RA
@@ -170,7 +170,7 @@ always_comb
   			//sinais dos registradores
   			MDRS = 0;
   			IRWrite = 0;
-  			RegWriteSignal = 0;
+  			RegWriteSignal = 1;
   			RegAW = 0;
   			RegBW = 0;
   			RegAluWrite = 0;
@@ -181,8 +181,8 @@ always_comb
 			PCCondMux = 2'b00;
 			IorDMux = 3'b000;
   			ReadSMux = 0;
-			ReadDstMux = 2'b00;
-			MemToRegMux = 3'b000;
+			ReadDstMux = 2'b10;
+			MemToRegMux = 3'b110;
   			AluSrcAMux = 0;
 			AluSrcBMux = 2'b00;
   			PCSourceMux = 3'b000;
@@ -195,7 +195,7 @@ always_comb
   			MemRead = 0;
 			MemWrite = 0;
 			AluOP = 3'b000;
-  			ShiftOp = 0;
+  			ShiftOp = 3'b000;
   			StartDiv = 0;
   			DivStop = 0;
   			DivZero = 0;
@@ -658,7 +658,7 @@ always_comb
           	nextState = LW_write;
     	end
     	LW_write= begin
-          PCWriteCond = 0;
+        PCWriteCond = 0;
   			PCWrite = 0;
   			//sinais dos registradores
   			MDRS = 0;
@@ -1035,6 +1035,828 @@ always_comb
   			RegWriteSignal = 0;
   			RegAW = 0;
   			RegBW = 0;
+  			RegAluWrite = 1;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 1;
+			AluSrcBMux = 2'b10;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 0;
+			MemWrite = 0;
+			AluOP = 3'b001;
+  			ShiftOp = 0;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = LH_memory;
+      	end
+    	LH_memory= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 0;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 0;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b100;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 0;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 1;
+			MemWrite = 0;
+			AluOP = 3'b000;
+  			ShiftOp = 0;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = LH_wait;
+    	end
+    	LH_wait= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 1;
+  			IRWrite = 0;
+  			RegWriteSignal = 0;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 0;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 0;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 1;
+			MemWrite = 0;
+			AluOP = 3'b000;
+  			ShiftOp = 0;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = LH_write;
+    	end    	
+    	LH_write= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 1;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 0;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b010;
+  			AluSrcAMux = 0;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b01;
+  			MemRead = 0;
+			MemWrite = 0;
+			AluOP = 3'b000;
+  			ShiftOp = 0;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = Fetch;
+    	end
+    	LB_address= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 0;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 1;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 1;
+			AluSrcBMux = 2'b10;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 0;
+			MemWrite = 0;
+			AluOP = 3'b001;
+  			ShiftOp = 0;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = LB_memory;
+    	end
+    	LB_memory= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 0;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 0;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b100;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 0;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 1;
+			MemWrite = 0;
+			AluOP = 3'b000;
+  			ShiftOp = 0;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = LB_wait;
+    	end
+    	LB_wait= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 1;
+  			IRWrite = 0;
+  			RegWriteSignal = 0;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 0;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 0;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 1;
+			MemWrite = 0;
+			AluOP = 3'b000;
+  			ShiftOp = 0;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = LB_write;
+    	end
+    	LB_write= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 1;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 0;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b010;
+  			AluSrcAMux = 0;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b10;
+  			MemRead = 0;
+			MemWrite = 0;
+			AluOP = 3'b000;
+  			ShiftOp = 0;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = Fetch;
+    	end
+    	SH_address= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 0;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 1;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 1;
+			AluSrcBMux = 2'b10;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 0;
+			MemWrite = 0;
+			AluOP = 3'b001;
+  			ShiftOp = 0;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = SH_memory;
+          
+    	end
+    	SH_memory= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 0;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 0;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b100;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 0;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 1;
+			MemWrite = 0;
+			AluOP = 3'b000;
+  			ShiftOp = 0;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = SH_wait;
+    	end
+    	SH_wait= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 1;
+  			IRWrite = 0;
+  			RegWriteSignal = 0;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 0;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 0;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 1;
+			MemWrite = 0;
+			AluOP = 3'b000;
+  			ShiftOp = 0;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = SH_write;
+    	end
+    	SH_write= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 0;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 0;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 0;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b01;
+  			MemRead = 0;
+			MemWrite = 1;
+			AluOP = 3'b000;
+  			ShiftOp = 0;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = Fetch;
+    	end
+    	SB_address= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 0;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 1;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 1;
+			AluSrcBMux = 2'b10;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 0;
+			MemWrite = 0;
+			AluOP = 3'b001;
+  			ShiftOp = 0;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = SB_memory;
+    	end
+    	SB_memory= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 0;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 0;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b100;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 0;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 1;
+			MemWrite = 0;
+			AluOP = 3'b000;
+  			ShiftOp = 0;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = SB_wait;
+    	end
+    	SB_wait= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 1;
+  			IRWrite = 0;
+  			RegWriteSignal = 0;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 0;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 0;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 1;
+			MemWrite = 0;
+			AluOP = 3'b000;
+  			ShiftOp = 0;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = SB_write;
+    	end
+      	SB_write= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 0;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 0;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 0;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b10;
+  			MemRead = 0;
+			MemWrite = 1;
+			AluOP = 3'b000;
+  			ShiftOp = 0;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = Fetch;
+    	end
+      	Slti= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 0;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 0;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 1;
+			AluSrcBMux = 2'b10;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 0;
+			MemWrite = 0;
+			AluOP = 3'b111;
+  			ShiftOp = 0;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = RegT_Write_slti;
+      	end
+      	RegT_Write_slti= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 1;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 0;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b101;
+  			AluSrcAMux = 0;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 0;
+			MemWrite = 0;
+			AluOP = 3'b000;
+  			ShiftOp = 0;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = Fetch;
+      	end
+      	
+        Addiu=begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 0;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 1;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 1;
+			AluSrcBMux = 2'b10;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 0;
+			MemWrite = 0;
+			AluOP = 3'b001;
+  			ShiftOp = 0;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = RegT_write;
+      	end
+      	Addi= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 0;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 1;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 1;
+			AluSrcBMux = 2'b10;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 0;
+			MemWrite = 0;
+			AluOP = 3'b001;
+  			ShiftOp = 0;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = Overflow ? ov_load : RegT_Write;
+      	end
+      	RegT_Write= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 1;
+  			RegAW = 0;
+  			RegBW = 0;
   			RegAluWrite = 0;
   			EPCWrite = 0;
   			RegHighW = 0;
@@ -1066,125 +1888,1334 @@ always_comb
   			MultO = 0;
           	
           	nextState = Fetch;
-      	end,
-    	LH_memory= begin
-    	end
-    	LH_wait= begin
-    	end
-    	LH_wait=  begin
-    	end
-    	LH_wait=  begin
-    	end
-    	LH_wait=  begin
-    	end
-    	LH_write= begin
-    	end
-    	LB_address= begin
-    	end
-    	LB_memory= begin
-    	end
-    	LB_wait= begin
-    	end
-    	LB_write= begin
-    	end
-    	SH_address= begin
-    	end
-    	SH_memory= begin
-    	end
-    	SH_wait= begin
-    	end
-    	SH_write= begin
-    	end
-    	SB_address= begin
-    	end
-    	SB_memory= begin
-    	end
-    	SB_wait= begin
-    	end
-      	SB_write= begin
-    	end
-      	Slti= begin
-      	end
-      	RegT_Write_slti= begin
-      	end
-      	
-      iu=begin
-      	end
-      	Addi= begin
-      	end
-      	RegT_Write= begin
       	end
 
-      	noop_load= begin
+      	ov_load= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 0;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 0;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b010;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 0;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 1;
+			MemWrite = 0;
+			AluOP = 3'b000;
+  			ShiftOp = 0;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = ov_wait;
       	end
-      	noop_wait= begin
+      	ov_wait= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 1;
+  			IRWrite = 0;
+  			RegWriteSignal = 0;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 0;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 0;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 1;
+			MemWrite = 0;
+			AluOP = 3'b000;
+  			ShiftOp = 0;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = ov_pc;
       	end
-      	noop_pc=begin
+      	ov_pc= begin
+          PCWriteCond = 0;
+  			PCWrite = 1;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 0;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 0;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 0;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b100;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b10;
+  			MemRead = 0;
+			MemWrite = 0;
+			AluOP = 3'b000;
+  			ShiftOp = 0;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = Fetch;
       	end
 
       	Push= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 0;
+  			RegAW = 1;
+  			RegBW = 0;
+  			RegAluWrite = 0;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 1;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 0;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 0;
+			MemWrite = 0;
+			AluOP = 3'b000;
+  			ShiftOp = 0;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = NewRA;
       	end
       	NewRA= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 0;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 1;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 1;
+			AluSrcBMux = 2'b01;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 0;
+			MemWrite = 0;
+			AluOP = 3'b010;
+  			ShiftOp = 0;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = SaveRA_write;
       	end
       	SaveRA_write= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 1;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 0;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b100;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b10;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 0;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 0;
+			MemWrite = 1;
+			AluOP = 3'b000;
+  			ShiftOp = 0;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = Fetch;
       	end
 
       	Pop=  begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 0;
+  			RegAW = 1;
+  			RegBW = 0;
+  			RegAluWrite = 0;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 0;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 0;
+			MemWrite = 0;
+			AluOP = 3'b000;
+  			ShiftOp = 0;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = Address;
       	end
       	Address= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 0;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 1;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 1;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 0;
+			MemWrite = 0;
+			AluOP = 3'b000;
+  			ShiftOp = 0;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = readAddress;
       	end
       	readAddres= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 0;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 0;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b100;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 0;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 1;
+			MemWrite = 0;
+			AluOP = 3'b000;
+  			ShiftOp = 0;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = Stall;
       	end
       	Stall= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 1;
+  			IRWrite = 0;
+  			RegWriteSignal = 0;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 0;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b100;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 0;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 1;
+			MemWrite = 0;
+			AluOP = 3'b000;
+  			ShiftOp = 0;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = Save_reg;
       	end
       	Save_Reg=  begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 1;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 0;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b010;
+  			AluSrcAMux = 0;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 0;
+			MemWrite = 0;
+			AluOP = 3'b000;
+  			ShiftOp = 0;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = New_pointer;
       	end
       	New_pointer=  begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 0;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 1;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 1;
+			AluSrcBMux = 2'b01;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 0;
+			MemWrite = 0;
+			AluOP = 3'b001;
+  			ShiftOp = 0;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = UpdateRA;
       	end
       	UpdateRA= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 1;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 0;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b10;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 0;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 0;
+			MemWrite = 0;
+			AluOP = 3'b000;
+  			ShiftOp = 0;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = Fetch;
       	end
 
       	Rte= begin
+          PCWriteCond = 0;
+  			PCWrite = 1;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 0;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 0;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 0;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b011;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 0;
+			MemWrite = 0;
+			AluOP = 3'b000;
+  			ShiftOp = 0;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = Fetch;
       	end
 
       	Mflo= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 1;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 0;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b11;
+			MemToRegMux = 3'b011;
+  			AluSrcAMux = 0;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 1;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 0;
+			MemWrite = 0;
+			AluOP = 3'b000;
+  			ShiftOp = 0;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = Fetch;
       	end
       	Mfhi= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 1;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 0;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b11;
+			MemToRegMux = 3'b011;
+  			AluSrcAMux = 0;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 0;
+			MemWrite = 0;
+			AluOP = 3'b000;
+  			ShiftOp = 0;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = Fetch;
       	end
       	Jr= begin
+          PCWriteCond = 0;
+  			PCWrite = 1;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 0;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 0;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 0;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b101;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 0;
+			MemWrite = 0;
+			AluOP = 3'b000;
+  			ShiftOp = 0;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = Fetch;
       	end
       	Break= begin
+          PCWriteCond = 0;
+  			PCWrite = 1;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 0;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 0;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 0;
+			AluSrcBMux = 2'b01;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 0;
+			MemWrite = 0;
+			AluOP = 3'b010;
+  			ShiftOp = 0;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = Fetch;
       	end
       	Slt= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 0;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 0;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 1;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 0;
+			MemWrite = 0;
+			AluOP = 3'b111;
+  			ShiftOp = 0;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = RegD_write_slt;
       	end
       	RegD_write_slt= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 1;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 0;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b11;
+			MemToRegMux = 3'b101;
+  			AluSrcAMux = 0;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 0;
+			MemWrite = 0;
+			AluOP = 3'b000;
+  			ShiftOp = 0;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = Fetch;
       	end
-      	SUb= begin
+      	Sub= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 0;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 1;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 1;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 0;
+			MemWrite = 0;
+			AluOP = 3'b010;
+  			ShiftOp = 0;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = Overflow ? ov_load : RegD_write;
       	end
       	And= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 0;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 1;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 1;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 0;
+			MemWrite = 0;
+			AluOP = 3'b011;
+  			ShiftOp = 0;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = RegD_write;
       	end
       	Add= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 0;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 1;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 1;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 0;
+			MemWrite = 0;
+			AluOP = 3'b001;
+  			ShiftOp = 0;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = Overflow ? ov_load : RegD_write;
       	end
-      	RegD_write=begin
+      	RegD_write= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 1;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 0;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b11;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 0;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 0;
+			MemWrite = 0;
+			AluOP = 3'b000;
+  			ShiftOp = 0;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = Fetch;
       	end
 
       	ShiftShamt= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 0;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 0;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 0;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 1;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 0;
+			MemWrite = 0;
+			AluOP = 3'b000;
+  			ShiftOp = 3'b001;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          case(funct)
+            6'h0 : nextstate = sll;
+            6'h2 : nextstate = srl;
+            6'h3 : nextstate = sra;
+          endcase
       	end
       	sll= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 0;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 0;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 0;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 0;
+			MemWrite = 0;
+			AluOP = 3'b000;
+  			ShiftOp = 3'b010;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = RegD_shift;
+          
       	end
       	srl= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 0;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 0;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 0;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 0;
+			MemWrite = 0;
+			AluOP = 3'b000;
+  			ShiftOp = 3'b011;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = RegD_shift;
       	end
       	sra= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 0;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 0;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 0;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 0;
+			MemWrite = 0;
+			AluOP = 3'b000;
+  			ShiftOp = 3'b100;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = RegD_shift;
       	end
 
-      	ShiftShamt= begin
+      	ShiftReg= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 0;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 0;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 0;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 1;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 0;
+			MemWrite = 0;
+			AluOP = 3'b000;
+  			ShiftOp = 3'b001;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          case(funct)
+            6'h4 : nextstate = sllv;
+            6'h7 : nextstate = srav;
+          endcase
       	end
       	sllv= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 0;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 0;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 0;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 0;
+			MemWrite = 0;
+			AluOP = 3'b000;
+  			ShiftOp = 3'b010;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = RegD_Shift;
       	end
       	srav= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 0;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 0;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 0;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 0;
+			MemWrite = 0;
+			AluOP = 3'b000;
+  			ShiftOp = 3'b100;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = RegD_Shift;
       	end
 
       	RegD_Shift= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 1;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 0;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b11;
+			MemToRegMux = 3'b001;
+  			AluSrcAMux = 0;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 0;
+			MemWrite = 0;
+			AluOP = 3'b000;
+  			ShiftOp = 3'b000;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = Fetch;
       	end
 
       	Div= begin
@@ -1201,10 +3232,127 @@ always_comb
       	Div_Stall=begin
       	end
       	noop_load= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 0;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 0;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b001;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 0;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 1;
+			MemWrite = 0;
+			AluOP = 3'b000;
+  			ShiftOp = 3'b000;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = noop_wait;
       	end
       	noop_wait= begin
+          PCWriteCond = 0;
+  			PCWrite = 0;
+  			//sinais dos registradores
+  			MDRS = 1;
+  			IRWrite = 0;
+  			RegWriteSignal = 0;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 0;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 0;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b000;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b00;
+  			MemRead = 1;
+			MemWrite = 0;
+			AluOP = 3'b000;
+  			ShiftOp = 3'b000;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = noop_pc;
       	end
       	noop_pc= begin
+          PCWriteCond = 0;
+  			PCWrite = 1;
+  			//sinais dos registradores
+  			MDRS = 0;
+  			IRWrite = 0;
+  			RegWriteSignal = 0;
+  			RegAW = 0;
+  			RegBW = 0;
+  			RegAluWrite = 0;
+  			EPCWrite = 0;
+  			RegHighW = 0;
+  			RegLowW = 0;
+  			//sinais dos MUX
+			PCCondMux = 2'b00;
+			IorDMux = 3'b000;
+  			ReadSMux = 0;
+			ReadDstMux = 2'b00;
+			MemToRegMux = 3'b000;
+  			AluSrcAMux = 0;
+			AluSrcBMux = 2'b00;
+  			PCSourceMux = 3'b100;
+  			RegInMux = 0;
+  			ShiftSMux = 0;
+  			DivMultMux = 0;
+  			MultSMux = 0;
+  			//sinais dos componentes
+  			WMS = 2'b10;
+  			MemRead = 0;
+			MemWrite = 0;
+			AluOP = 3'b000;
+  			ShiftOp = 3'b000;
+  			StartDiv = 0;
+  			DivStop = 0;
+  			DivZero = 0;
+  			StartMult = 0;
+  			MultStop = 0;
+  			MultO = 0;
+          	
+          	nextState = Fetch;
       	end
 
 endmodule: Control
