@@ -2,17 +2,17 @@ module cpu(input clock, input reset);
 
 //Fios grandoes:
 logic PCIn[31:0]; //saida do PCSource
-logic PCOut[31:0];
+logic PCOut[31:0]; //saida do pc
 logic IorDOut[31:0];
 logic MemOut[31:0];
 logic WMWriteData[31:0];
 logic MDROut[31:0];
 logic WMRegOut[31:0];
-logic inst25_0[25:0]; //facilita ter só ele porque no jump não precisa concatenar nada
+logic inst25_0[25:0]; //facilita ter sÃ³ ele porque no jump nÃ£o precisa concatenar nada
 logic op[5:0];
 logic rs[4:0]; //inst25_0[25:21]
 logic rt[4:0]; //inst25_0[20:16]
-logic inst15_0[15:0]; //conferir se é isso msm vlw
+logic inst15_0[15:0]; //conferir se Ã© isso msm vlw
 logic rd[4:0]; // inst15_0 [15:11]
 logic shamt[4:0]; // inst15_0[10:6]
 logic funct[5:0]; // inst15_0[5:0]
@@ -52,6 +52,9 @@ logic PCWriteCond; // sinal da unidade de controle
 logic PCWrite; // sinal da unidade de controle
 logic PCAnd; //PcWriteCond and PCCondOut
 logic PCControl; //fio da unidade de controle que entra em PC (PCAnd or PCWrite)
+
+assign PCAnd = PCWriteCond and PCCondOut;
+assign PCControl = PCAnd or PCWrite;
 
 //Sinais de registradores:
 logic MDRS;
@@ -99,14 +102,64 @@ logic equalFlag; //et
 logic ltFlag; //less than
 logic gtFlag; //greater than
 
-Control ControlUnit( //unidade de controle (falta implementar)
+Control ControlUnit(
+	.clk(clock),
+	.reset(reset),
+	//fios da instrucao
+	.shamt(shamt),
+	.funct(funct),
+	.op(op),
+	//sinais da alu
+	.Overflow(overflowFlag),
+	//sinais de saida da Unidade de controle
+	//sinais de pc
+	.PCWriteCond(PCWriteCond),
+	.PCWrite(PCWrite),
 
+	//sinais dos registradores
+	.MDRS(MDRS),
+	.IRWrite(IRWrite),
+	.RegWriteSignal(RegWriteSignal),
+	.RegAW(RegAW),
+	.RegBW(RegBW),
+	.RegAluWrite(RegAluWrite),
+	.EPCWrite(EPCWrite),
+	.RegHighW(RegHighW),
+	.RegLowW(RegLowW),
+
+	//sinais dos MUX
+	.PCCondMux(PCCondMux),
+	.IorDMux(IorDMux),
+	.ReadSMux(ReadSMux),
+	.ReadDstMux(ReadDstMux),
+	.MemToRegMux(MemToRegMux),
+	.AluSrcAMux(AluSrcAMux),
+	.AluSrcBMux(AluSrcBMux),
+	.PCSourceMux(PCSourceMux),
+	.RegInMux(RegInMux),
+	.ShiftSMux(ShiftSMux),
+	.DivMultMux(DivMultMux),
+	.MultSMux(MultSMux),
+
+	//sinais dos componentes
+	.WMS(WMS),
+	.MemWrite(MemWrite),
+	.AluOP(AluOP),
+	.ShiftOp(ShiftOp),
+	.StartDiv(StartDiv),
+	.DivStop(DivStop),
+	.DivZero(DivZero),
+	.StartMult(StartMult),
+	.StopMult(StopMult),
+	.MultO(MultO),
+	//estado
+    .stateOut(stateOut)
 );
 
 Registrador PC(
 	.Clk(clock),
 	.Reset(reset),
-	.Load(PCControl), //conferir se é isso(ta certo, so falta fazer o OR entre os fios. bois)
+	.Load(PCControl), //conferir se Ã© isso(ta certo, so falta fazer o OR entre os fios. bois)
 	.Entrada(PCIn),
 	.Saida(PCOut)
 );
@@ -124,19 +177,23 @@ Mux5 IorD( //faltando declarar os outros fios
 Memoria Mem( // terminar *
 	.Address(IorDOut),
 	.Clock(clock),
-	.Wr(),
-	.Datain(),
-	.Dataout()
+	.Wr(/*memread*/),
+	.Datain(WMWriteData),
+	.Dataout(MemOut)
 );
 
 WriteMode WM(
-	//conexoes
+	.RegIn(RegBOut),
+	.MemIn(MDROut),
+	.mode(/*unidade de controle*/),
+	.MemOut(WMWriteData),
+	.RegOut(WMRegOut)
 );
 
 Registrador MDR(
 	.Clk(clock),
 	.Reset(reset),
-	.Load(MDRS), //conferir se é isso(ta certo tbm. bois)
+	.Load(MDRS), //conferir se Ã© isso(ta certo tbm. bois)
 	.Entrada(MemOut),
 	.Saida(MDROut)
 );
@@ -183,7 +240,7 @@ Mux7 MemToReg(
 Banco_reg Registers(
 	.Clk(clock),
 	.Reset(reset),
-	.RegWrite(RegWriteSignal), //ver se tem problema(certo, eh o sinal que escreve ou lê. bois)
+	.RegWrite(RegWriteSignal), //ver se tem problema(certo, eh o sinal que escreve ou lÃª. bois)
 	.ReadReg1(ReadSOut),
 	.ReadReg2(rt),
 	.WriteReg(RegDstOut),
@@ -196,7 +253,7 @@ Banco_reg Registers(
 Registrador A(
 	.Clk(clock),
 	.Reset(reset),
-	.Load(RegAW), //conferir se é isso(ok. bois)
+	.Load(RegAW), //conferir se Ã© isso(ok. bois)
 	.Entrada(RegAIn),
 	.Saida(RegAOut)
 );
@@ -204,7 +261,7 @@ Registrador A(
 Registrador B(
 	.Clk(clock),
 	.Reset(reset),
-	.Load(RegBW), //conferir se é isso(ok. bois)
+	.Load(RegBW), //conferir se Ã© isso(ok. bois)
 	.Entrada(RegBIn),
 	.Saida(RegBOut)
 );
@@ -257,7 +314,7 @@ ula32 ALU(
 Registrador ALUOut(
 	.Clk(clock),
 	.Reset(reset),
-	.Load(RegALuWrite), //conferir se é isso(ok. bois)
+	.Load(RegALuWrite), //conferir se Ã© isso(ok. bois)
 	.Entrada(AluResult),
 	.Saida(RegAluOut)
 );
@@ -265,7 +322,7 @@ Registrador ALUOut(
 Registrador EPC(
 	.Clk(clock),
 	.Reset(reset),
-	.Load(EPCWrite), //conferir se é isso(ok, bois)
+	.Load(EPCWrite), //conferir se Ã© isso(ok, bois)
 	.Entrada(AluResult),
 	.Saida(EPCOut)
 );
@@ -339,7 +396,7 @@ Mux2 DivMultLow( //escolhe se vai pro reg LOW o low do mult ou div
 Registrador High(
 	.Clk(clock),
 	.Reset(reset),
-	.Load(RegHighW), //conferir se é isso
+	.Load(RegHighW), //conferir se Ã© isso
 	.Entrada(MUXHighOut),
 	.Saida(HighOut)
 );
@@ -347,7 +404,7 @@ Registrador High(
 Registrador Low(
 	.Clk(clock),
 	.Reset(reset),
-	.Load(RegLowW), //conferir se é isso
+	.Load(RegLowW), //conferir se Ã© isso
 	.Entrada(MUXLowOut),
 	.Saida(LowOut)
 );
@@ -359,11 +416,11 @@ Mux2 MultS( //manda guardar o valor do high (0) ou do low(0) no br
 	.sel(MultSMux)
 );
 
-assign rs = inst25_0[25:21];
-assign rt = inst25_0[20:16];
+assign rs = inst25_0 [25:21];
+assign rt = inst25_0 [20:16];
 assign rd = inst15_0 [15:11];
 assign shamt = inst15_0 [10:6];
-assign funct = inst15_0[5:0];
+assign funct = inst15_0 [5:0];
 assign sp = 29;
 assign reg31 = 31;
 
