@@ -177,7 +177,7 @@ Mux5 IorD( //faltando declarar os outros fios
 Memoria Mem( // terminar *
 	.Address(IorDOut),
 	.Clock(clock),
-	.Wr(/*memread*/),
+	.Wr(MemWrite),
 	.Datain(WMWriteData),
 	.Dataout(MemOut)
 );
@@ -185,7 +185,7 @@ Memoria Mem( // terminar *
 WriteMode WM(
 	.RegIn(RegBOut),
 	.MemIn(MDROut),
-	.mode(/*unidade de controle*/),
+	.mode(WMS),
 	.MemOut(WMWriteData),
 	.RegOut(WMRegOut)
 );
