@@ -1,50 +1,51 @@
-module cpu(input clock, input reset);
+module CPU(input clock, input reset);
 
 //Fios grandoes:
-logic PCIn[31:0]; //saida do PCSource
-logic PCOut[31:0]; //saida do pc
-logic IorDOut[31:0];
-logic MemOut[31:0];
-logic WMWriteData[31:0];
-logic MDROut[31:0];
-logic WMRegOut[31:0];
-logic inst25_0[25:0]; //facilita ter só ele porque no jump não precisa concatenar nada
-logic op[5:0];
-logic rs[4:0]; //inst25_0[25:21]
-logic rt[4:0]; //inst25_0[20:16]
-logic inst15_0[15:0]; //conferir se é isso msm vlw
-logic rd[4:0]; // inst15_0 [15:11]
-logic shamt[4:0]; // inst15_0[10:6]
-logic funct[5:0]; // inst15_0[5:0]
-logic sp[4:0]; //$29
-logic reg31[4:0]; //$31
-logic ReadSOut[4:0];
-logic RegDstOut[4:0]; 
-logic MemToRegOut[31:0];
-logic SignExtendOut[31:0];
-logic SL1Out[31:0];
-logic SL2Out[31:0];
-logic RegAIn[31:0];
-logic RegAOut[31:0];
-logic RegBIn[31:0];
-logic RegBOut[31:0];
-logic AluSrcAOut[31:0];
-logic AluSrcBOut[31:0];
-logic AluResult[31:0]; //ALUOut
-logic RegAluOut[31:0]; //saida ALUOut
-logic EPCOut[31:0];
-logic RegInOut[31:0];
-logic ShiftSOut[31:0];
-logic RegDeslocOut[31:0];
-logic DivHighOut[31:0];
-logic DivLowOut[31:0];
-logic MultHighOut[31:0];
-logic MultLowOut[31:0];
-logic MUXHighOut[31:0];
-logic MUXLowOut[31:0];
-logic HighOut[31:0];
-logic LowOut[31:0];
-logic MultSOut[31:0];
+logic [31:0] PCIn; //saida do PCSource
+logic [31:0] PCOut; //saida do pc
+logic [31:0] IorDOut;
+logic [31:0] MemOut;
+logic [31:0] WMWriteData;
+logic [31:0] MDROut;
+logic [31:0] WMRegOut;
+logic [25:0] inst25_0; //facilita ter só ele porque no jump não precisa concatenar nada
+logic [5:0] op;
+logic [4:0] rs; //inst25_0[25:21]
+logic [4:0]rt; //inst25_0[20:16]
+logic [15:0] inst15_0; //conferir se é isso msm vlw
+logic [4:0] rd; // inst15_0 [15:11]
+logic [4:0] shamt; // inst15_0[10:6]
+logic [5:0] funct; // inst15_0[5:0]
+logic [4:0] sp; //$29
+logic [4:0] reg31; //$31
+logic [4:0] ReadSOut;
+logic [4:0] RegDstOut; 
+logic [31:0] MemToRegOut;
+logic [31:0] SignExtendOut;
+logic [31:0] SL1Out;
+logic [31:0] SL2Out;
+logic [31:0] RegAIn;
+logic [31:0] RegAOut;
+logic [31:0] RegBIn;
+logic [31:0] RegBOut;
+logic [31:0] AluSrcAOut;
+logic [31:0] AluSrcBOut;
+logic [31:0] AluResult; //ALUOut
+logic [31:0] RegAluOut; //saida ALUOut
+logic [31:0] EPCOut;
+logic [31:0] RegInOut;
+logic [31:0] ShiftSOut;
+logic [31:0] RegDeslocOut;
+logic [31:0] DivHighOut;
+logic [31:0] DivLowOut;
+logic [31:0] MultHighOut;
+logic [31:0] MultLowOut;
+logic [31:0] MUXHighOut;
+logic [31:0] MUXLowOut;
+logic [31:0] HighOut;
+logic [31:0] LowOut;
+logic [31:0] MultSOut;
+logic [31:0] stateOut;
 
 //Sinais de PC:
 logic PCCondOut; //saida do MUX PCCond
@@ -53,8 +54,8 @@ logic PCWrite; // sinal da unidade de controle
 logic PCAnd; //PcWriteCond and PCCondOut
 logic PCControl; //fio da unidade de controle que entra em PC (PCAnd or PCWrite)
 
-assign PCAnd = PCWriteCond and PCCondOut;
-assign PCControl = PCAnd or PCWrite;
+//assign PCAnd = PCWriteCond and PCCondOut;
+//assign PCControl = PCAnd or PCWrite;
 
 //Sinais de registradores:
 logic MDRS;
@@ -68,24 +69,24 @@ logic RegHighW;
 logic RegLowW;
 
 //Sinais dos MUX:
-logic IorDMux[2:0]; //mux 5
+logic [2:0] IorDMux; //mux 5
 logic ReadSMux; //mux 2
-logic ReadDstMux[1:0]; //mux 4
-logic MemToRegMux[2:0]; //mux 7
+logic [1:0] ReadDstMux; //mux 4
+logic [2:0] MemToRegMux; //mux 7
 logic AluSrcAMux; //mux 2
-logic AluSrcBMux[1:0]; //mux 4
-logic PCSourceMux[2:0]; //mux 6
+logic [1:0] AluSrcBMux; //mux 4
+logic [2:0] PCSourceMux; //mux 6
 logic RegInMux; //mux 2
 logic ShiftSMux; //mux 2
 logic DivMultMux; //mux 2
 logic MultSMux; //mux 2
-logic PCCondMux[1:0];
+logic [1:0] PCCondMux;
 
 // Sinais dos componentes:
 logic WMS; //write mode signal
 logic MemRead;
 logic MemWrite;
-logic AluOp[2:0];
+logic [2:0] AluOp;
 logic ShiftOp;
 logic StartDiv;
 logic DivStop;
@@ -111,7 +112,6 @@ Control ControlUnit(
 	.op(op),
 	//sinais da alu
 	.Overflow(overflowFlag),
-	//sinais de saida da Unidade de controle
 	//sinais de pc
 	.PCWriteCond(PCWriteCond),
 	.PCWrite(PCWrite),
@@ -370,13 +370,11 @@ RegDesloc RD( //Reg Desloc
 	.Saida(RegDeslocOut)
 );
 
-Div Divisor(
+//Div Divisor(
+//);
 
-);
-
-Mult Multiplicador(
-
-);
+//Mult Multiplicador(
+//);
 
 Mux2 DivMultHigh( //escolhe se vai pro reg HIGH o high do mult ou div
 	.A(DivHighOut),
@@ -424,4 +422,4 @@ assign funct = inst15_0 [5:0];
 assign sp = 29;
 assign reg31 = 31;
 
-endmodule:cpu
+endmodule:CPU
