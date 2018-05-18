@@ -7,7 +7,7 @@ module Div (A, B, clk, Reset, resultHigh, resultLow,
 	input clk, Reset;
 	input DivIn; //nosso StartDiv
 	output reg DivStop; //avisa que acabou
-	output reg DivZero; //avisa que A/0 - exceÃ§Ã£o
+	output reg DivZero; //avisa que A/0 - excecao
 	output reg [31:0] resultHigh, resultLow;
 	integer contador = 32;
 	reg [64:0] Quociente = 0;
@@ -28,7 +28,7 @@ module Div (A, B, clk, Reset, resultHigh, resultLow,
 		
 		if ( Dividendo == 0) begin
 			DivZero = 1;
-			//tratar exceÃ§Ã£o
+			//tratar excecao
 		end
 
 		Resto = Resto - Divisor;
@@ -44,14 +44,14 @@ module Div (A, B, clk, Reset, resultHigh, resultLow,
 			Quociente[0] = 1'b0;
 		end
 
-		Dividendo = Dividendo >> 1;
+		Divisor = Divisor >> 1;
 
 		if (contador > 0) begin
 			contador = (contador - 1);
 		end
 
 		if (contador == 0) begin
-			//seta as saÃ­das
+			//seta as saidas
 			resultHigh = Quociente[64:33];
 			resultLow = Quociente[32:1];
 			DivStop = 0;
