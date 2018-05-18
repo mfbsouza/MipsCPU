@@ -1,4 +1,4 @@
-module Divisor (A, B, clk, Reset, resultHigh, resultLow, 
+module Div (A, B, clk, Reset, resultHigh, resultLow, 
 				DivIn, DivStop, DivZero );
 
 	// A/B
