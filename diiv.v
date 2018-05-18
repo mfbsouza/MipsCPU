@@ -10,16 +10,19 @@ module Divisor (A, B, clk, Reset, resultHigh, resultLow,
 	output reg DivZero; //avisa que A/0 - exceÃ§Ã£o
 	output reg [31:0] resultHigh, resultLow;
 	integer contador = 32;
-	reg [64:0] Quociente;
+	reg [64:0] Quociente = 0;
 	reg [31:0] Resto ;
 	reg [31:0] Dividendo;
+	reg [31:0] Divisor;
+	
+	
 	
 
 	always @(posedge clk) begin
 
 		if (contador == 32) begin
-			Dividendo = B;
-			Quociente = A;
+			Divisor = B;
+			Dividendo = A;
 
 		end
 		
@@ -28,7 +31,7 @@ module Divisor (A, B, clk, Reset, resultHigh, resultLow,
 			//tratar exceÃ§Ã£o
 		end
 
-		Resto = Resto - Dividendo;
+		Resto = Resto - Divisor;
 
 		if (Resto >= 0) begin
 			Quociente = Quociente << 1;
@@ -36,7 +39,7 @@ module Divisor (A, B, clk, Reset, resultHigh, resultLow,
 		end
 
 		if (Resto < 0) begin
-			Resto = Resto + Dividendo;
+			Resto = Resto + Divisor;
 			Quociente = Quociente << 1;
 			Quociente[0] = 1'b0;
 		end
