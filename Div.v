@@ -26,6 +26,8 @@ module Div (A, B, clk, Reset, resultHigh, resultLow,
 
 		end
 		
+		Resto = Dividendo % Divisor;
+		
 		if ( Dividendo == 0) begin
 			DivZero = 1;
 			//tratar excecao
