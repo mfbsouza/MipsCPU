@@ -19,7 +19,7 @@
 
 ## Group
  the creators of this project are the following Computer Engineering students:
- * [Matheus Ferreira](https://github.com/PunishedBois) (email: mfbs@cin.ufpe.br)
+ * [Matheus Ferreira](https://github.com/mfbsouza) (email: mfbs@cin.ufpe.br)
  * [Gabriela Leal](https://github.com/gabrielaleal) (email: gmfl@cin.ufpe.br)
  * [Beatiz Alves](https://github.com/biaalves) (email: babs@cin.ufpe.br)
  * [Marcos Monteiro](https://github.com/marcosmmb) (email: mmmb@cin.ufpe.br)
